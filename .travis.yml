@@ -1,0 +1,9 @@
+language: c
+before_install:
+    - sudo apt-get install valgrind
+    - ./install_deps.sh
+install:
+compiler:
+    - gcc
+    - clang
+script: ./autogen.sh && ./configure && make check
