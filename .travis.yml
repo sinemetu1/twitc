@@ -8,8 +8,5 @@ compiler:
 - clang
 script: ./autogen.sh && ./configure && make check
 env:
-  global:
-  - secure: RffJZpGMFe04duDVXtz1NhgoJNd9LTKzzKuyS3ExehlC5ENzmoKnV5t8xPlSDHY1BGzOmiv4wvXyOhh/IPwOpk02+zDlcvDSGzxoIDeqPd61/4tCO6PbRiMa1qHAg0svNHTJGAyAdTHqEXUe8uwrOow/mmJ49VMLJY3R3xwuE6s=
-  - secure: jmEh4s+bwV4kqZg9Ti2zx/9PZgzR+Felv08nA7nWi8lHUjwkF8U8BhInHp24IkVnUd1FHImlVy39h/dSap69weFHqDL84o/jjD1aGVDiBS8tS5Td+thqmCJ25xkgfJxVQ6AfdSfoQu2jNbVcWs9iZ6Daxq1swc9GDUotpBUXVTE=
-  - secure: djZ63YsA0wUQtE9MmbMqmTKS8cGbGAAAs5xk5z0hD2TQK9eFpz6CXizQPc506JxjO7zF6t0qviADCJ5VMuw4pnlp/q9tor5AKHEcWQ/ebTGBfLR2XyDLBVPkYm4aJlF0HsWBrnIaclEz8npxg+9nGjGLZYikpWYypT/JFrM4kz8=
-  - secure: I7ScNwUbQ4dCGh/Mzwl4a4Jq5G+nohNv8zzRkvqxmOf9V8/jB5g6sO5L2VnSZhhRg3hb07/6sKCbrnMK7mi/Y8Y/LPAVEtZMAAHLrwHHPiok1Y4nyqtLqJGSR9AYYYWozmnVQaKl/R9jxHfYeFPZtLO4oCtB9rPOQbGo75ylHVY=
+    global:
+        - TWITC_KEY=A TWITC_SECRET=B TWITC_ACCESS_TOKEN=C TWITC_ACCESS_SECRET=D

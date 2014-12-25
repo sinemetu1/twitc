@@ -7,7 +7,7 @@ cd liboauth-1.0.3/
 autoreconf -iv
 ./configure
 make
-make install --prefix=/usr
+make install --prefix="/usr"
 
 # install json-c
 cd ..
@@ -16,4 +16,4 @@ cd json-c
 sh autogen.sh
 ./configure
 make
-make install --prefix=/usr
+make install --prefix="/usr"
