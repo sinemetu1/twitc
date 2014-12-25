@@ -5,11 +5,6 @@ A mini C library for interacting with the Twitter OAuth api.
 
 ### Installation:
 
-#### Dependencies:
-
-[liboauth](http://liboauth.sourceforge.net/)
-
-[json-c](https://github.com/json-c/json-c)
 
     ./autogen.sh
     ./configure
@@ -18,6 +13,12 @@ A mini C library for interacting with the Twitter OAuth api.
 
 NOTE: There are environment variables that can be set for consumer token,
     consumer secret, app token, and app secret. See twitc.h.
+
+#### Dependencies:
+
+[liboauth](http://liboauth.sourceforge.net/)
+
+[json-c](https://github.com/json-c/json-c)
 
 ### Usage:
 
