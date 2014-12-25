@@ -23,6 +23,7 @@ CFLAGS+="-Wsign-compare -Iincludes -g "
 AC_SUBST([CFLAGS])
 
 AC_PROG_CC
+AM_PROG_CC_C_O
 AM_PROG_AR
 AC_LANG([C])
 LT_INIT

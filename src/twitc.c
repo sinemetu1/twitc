@@ -73,7 +73,7 @@ twitc_do_curl(char *http_hdr, char *req_url,
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)chunk);
     }
-    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+    /*curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);*/
 
     // DO the request
     curl_res = curl_easy_perform(curl);
