@@ -145,9 +145,7 @@ char
 char
 *twitc_all_tests(void)
 {
-    mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_request_token);
-    /*mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_authorize_token);*/
-    /*mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_access_token);*/
-    mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_twitter);
+    /*mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_request_token);*/
+    /*mu_run_test(__FILE__, __LINE__, __func__, test_twitc_oauth_twitter);*/
     return 0;
 }

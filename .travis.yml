@@ -1,12 +1,19 @@
 language: c
 before_install:
 - sudo apt-get install valgrind
-- ./install_deps.sh
-install: 
+- ./install_deps.sh /home/travis
+install: libtoolize && ./autogen.sh && ./configure
 compiler:
-- gcc
-- clang
-script: ./autogen.sh && ./configure && make check
+    - gcc
+script: make check
 env:
     global:
         - TWITC_KEY=A TWITC_SECRET=B TWITC_ACCESS_TOKEN=C TWITC_ACCESS_SECRET=D
+        - CFLAGS="-I/home/travis/include -L/home/travis/lib"
+after_failure:
+    - cat /home/travis/build/sinemetu1/twitc/src/test-suite.log
+    - cat /home/travis/build/sinemetu1/twitc/src/test/test_reply.log
+    - cat /home/travis/build/sinemetu1/twitc/src/test/test_twitc.log
+after_success:
+    - ls /home/travis/build/sinemetu1/twitc/src
+    - ls /home/travis/build/sinemetu1/twitc/src/test
