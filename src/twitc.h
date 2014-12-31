@@ -9,10 +9,10 @@
 #include <stdlib.h>
 
 // twitc version
-#define LIBTWITC_VERSION "0.0.1"
+#define LIBTWITC_VERSION "0.0.2"
 #define LIBTWITC_VERSION_MAJOR 0
 #define LIBTWITC_VERSION_MINOR 0
-#define LIBTWITC_VERSION_MICRO 1
+#define LIBTWITC_VERSION_MICRO 2
 
 #define TWITC_OAUTH_TOKEN    "oauth_token"
 #define TWITC_OAUTH_VERIFIER "oauth_verifier"
@@ -23,7 +23,7 @@
 #define USER_STREAM_URL   "https://userstream.twitter.com/1.1/user.json"
 #define USER_STATUS_URL   "https://api.twitter.com/1.1/statuses/update.json"
 #define TEST_TIMELINE_URL "https://api.twitter.com/1.1/statuses/user_timeline.json"
-#define REQUEST_TOKEN_URL "https://api.twitter.com/oauth/request_token?oauth_callback=oob"
+#define REQUEST_TOKEN_URL "https://api.twitter.com/oauth/request_token"
 #define AUTHORIZE_URL     "https://api.twitter.com/oauth/authorize"
 #define ACCESS_TOKEN_URL  "https://api.twitter.com/oauth/access_token"
 
@@ -142,7 +142,7 @@ int twitc_oauth_access_token(const char *req_c_key, const char *req_c_secret,
  * @return a pointer to a MemoryStruct containing the reply from twitter. Caller
  * should free.
  */
-struct MemoryStruct* 
+struct MemoryStruct *
 twitc_oauth_twitter(const char *a_url, const char *req_c_key,
                     const char *req_c_secret, char *user_token,
                     char *user_secret, int isPost,

@@ -18,8 +18,9 @@
  *
  * @param contents a char* is expected in json format
  * @return the author
+ *   NOTE: caller will need to free returned value
  */
-char *twitc_parse_json_author(void *contents);
+char * twitc_parse_json_author(char *contents);
 
 /**
  * Takes a reply from twitters authentication endpoints and
@@ -40,6 +41,6 @@ int twitc_parse_reply(char *reply, char **token, char **secret);
  * @param contents a char* is expected in json format
  * @return 0 == success and 1 == failure.
  */
-int twitc_reply_has_error(void *contents);
+int twitc_reply_has_error(char *contents);
 
 #endif
