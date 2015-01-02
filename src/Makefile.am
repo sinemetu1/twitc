@@ -37,5 +37,15 @@ check-valgrind:
 	valgrind --leak-check=full --track-origins=yes test/test_twitc
 	valgrind --leak-check=full --track-origins=yes test/test_reply
 
+coverage: clean check
+	gcov twitc.c -o test_test_twitc-twitc.o -f
+	gcov test/test_twitc.c -o test/test_test_twitc-test_twitc.o -f
+	gcov twitc_reply.c -o test_test_reply-twitc_reply.o -f
+	gcov test/test_reply.c -o test/test_test_reply-test_reply.o -f
+
+clean-local:
+	find ./ ./test/ -type f -name "*.gc*" -exec rm {} \;
+	find ./test/ -type f -name "integration" -exec rm {} \;
+
 integration: test/integration
 	test/integration

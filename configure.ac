@@ -20,6 +20,19 @@ CFLAGS="$CFLAGS "
 CFLAGS+="-Wall -Wstrict-prototypes -Wmissing-prototypes "
 CFLAGS+="-Wmissing-declarations -Wshadow -Wpointer-arith -Wcast-qual "
 CFLAGS+="-Wsign-compare -Iincludes -g "
+
+AC_ARG_ENABLE([gcov],
+              AS_HELP_STRING([--enable-gcov], [enable gcov code-coverage(default=no)]),
+              [],
+              [enable_gcov=no]
+              )
+
+AS_IF([test "x$enable_gcov" = "xyes"],
+      [CFLAGS+="-fprofile-arcs -ftest-coverage "],
+      [test "x$enable_gcov" = "xno"], [CFLAGS+=" "],
+      [echo "enable-gcov with wrong value"]
+      )
+
 AC_SUBST([CFLAGS])
 
 AC_PROG_CC

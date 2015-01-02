@@ -2,6 +2,7 @@ twitc
 ===========
 
 [![Build Status](https://travis-ci.org/sinemetu1/twitc.svg)](https://travis-ci.org/sinemetu1/twitc)
+[![Coverage Status](https://coveralls.io/repos/sinemetu1/twitc/badge.png)](https://coveralls.io/r/sinemetu1/twitc)
 
 A mini C library for interacting with the Twitter OAuth api.
 
