@@ -11,3 +11,6 @@ integration:
 
 check-valgrind:
 	cd src; make check-valgrind;
+
+coverage:
+	cd src; make coverage;
