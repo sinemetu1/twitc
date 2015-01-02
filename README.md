@@ -7,7 +7,6 @@ A mini C library for interacting with the Twitter OAuth api.
 
 ### Installation:
 
-
     ./autogen.sh
     ./configure
     make
@@ -15,7 +14,8 @@ A mini C library for interacting with the Twitter OAuth api.
 
 NOTE: There are environment variables that can be set for consumer token,
 consumer secret, app token, and app secret. See
-[twitc.h](https://github.com/sinemetu1/twitc/blob/master/src/twitc.h).
+[twitc.h](https://github.com/sinemetu1/twitc/blob/master/src/twitc.h)
+and the [usage section](https://github.com/sinemetu1/twitc/tree/test-separation#usage) below.
 
 #### Dependencies:
 
@@ -29,21 +29,26 @@ See [main.c](https://github.com/sinemetu1/twitc/blob/master/src/main.c) for an e
 
 Environment variables include:
 
-    TWITC_KEY
-    TWITC_SECRET
-    TWITC_ACCESS_TOKEN
-    TWITC_ACCESS_SECRET
+    export TWITC_KEY="Consumer Key (API Key)"
+    export TWITC_SECRET="Consumer Secret (API Secret)"
+    export TWITC_ACCESS_TOKEN="Access Token"
+    export TWITC_ACCESS_SECRET="Access Token Secret"
 
 To generate these values go to
 [https://apps.twitter.com/](https://apps.twitter.com/).
 
 ### Tests:
 
-Tests can be run with `make check` if you have the environment variables above
-setup correctly and uncommenting test calls in `twitc_all_tests` in
-[src/test/test_twitc.c](https://github.com/sinemetu1/twitc/blob/master/src/test/test_twitc.c)
-will help you debug any issues.
+Local tests can be run with `make check`.
+
+If you have the environment variables above setup correctly then
+you can run `make integration` to test actual integration with
+Twitter's API.
 
 ### Bugs:
 
 Please file bugs in Github issues.
+
+### License:
+
+[MIT](https://github.com/sinemetu1/twitc/blob/test-separation/LICENSE)

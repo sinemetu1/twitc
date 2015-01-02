@@ -5,12 +5,14 @@ before_install:
 install: libtoolize && ./autogen.sh && ./configure
 compiler:
     - gcc
-script: make check
+script: make check && make check-valgrind
 env:
     global:
         - TWITC_KEY=A TWITC_SECRET=B TWITC_ACCESS_TOKEN=C TWITC_ACCESS_SECRET=D
         - CFLAGS="-I/home/travis/include -L/home/travis/lib"
 after_failure:
+    - ls /home/travis/build/sinemetu1/twitc/src
+    - ls /home/travis/build/sinemetu1/twitc/src/test
     - cat /home/travis/build/sinemetu1/twitc/src/test-suite.log
     - cat /home/travis/build/sinemetu1/twitc/src/test/test_reply.log
     - cat /home/travis/build/sinemetu1/twitc/src/test/test_twitc.log

@@ -3,9 +3,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <curl/curl.h>
 #include <string.h>
 #include <oauth.h>
+#include <curl/curl.h>
+
+#if defined(TEST_TWITC)
+#include "test/test.h"
+#endif
 
 size_t
 stream_callback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -54,15 +58,28 @@ twitc_do_curl(char *http_hdr, char *req_url,
     slist = curl_slist_append(slist, http_hdr);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
     curl_easy_setopt(curl, CURLOPT_URL, req_url);
+    #if defined(TEST_TWITC)
+        test_curl_easy_setopt(curl, CURLOPT_HTTPHEADER, http_hdr, test_curl_header);
+        test_curl_easy_setopt(curl, CURLOPT_URL, req_url, test_curl_url);
+    #endif
 
     if (post_data != NULL) {
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
+        #if defined(TEST_TWITC)
+            test_curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data, test_curl_post_data);
+        #endif
         // Debug:
         /*fprintf(stderr, "Curl is:\n");*/
         /*fprintf(stderr, "curl --request 'POST' '%s' --data '%s' --header '%s' --verbose\n",*/
                 /*req_url, post_data, http_hdr);*/
     }
+    #if defined(TEST_TWITC)
+      else {
+        test_curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "(null)", test_curl_post_data);
+    }
+    #endif
+
     // Debug:
     /*fprintf(stderr, "Curl is:\n");*/
     /*fprintf(stderr, "curl --get '%s' --header '%s' --verbose\n", req_url, http_hdr);*/
@@ -73,20 +90,27 @@ twitc_do_curl(char *http_hdr, char *req_url,
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)chunk);
     }
-    /*curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);*/
 
     // DO the request
-    curl_res = curl_easy_perform(curl);
+    #if !defined(TEST_TWITC)
+        curl_res = curl_easy_perform(curl);
+    #else
+        test_curl_easy_perform(curl, curl_res);
+        if (chunk != NULL && callback != NULL ) {
+            char *test_contents = "test contents";
+            callback(test_contents, strlen(test_contents), 1, chunk);
+        }
+    #endif
+
+    /* we're done with libcurl, so clean it up */
+    if (slist) { curl_slist_free_all(slist); }
     curl_easy_cleanup(curl);
+
     if (curl_res != CURLE_OK) {
         fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(curl_res));
         return -1;
     }
-
-    /* we're done with libcurl, so clean it up */ 
-    if (slist) { curl_slist_free_all(slist); }
-    curl_global_cleanup();
 
     return 0;
 }
@@ -132,7 +156,8 @@ twitc_oauth_request(const char *url,
     }
 
     auth_params = oauth_serialize_url_sep(argc, 1, argv, ", ", 6);
-    sprintf(auth_header, "Authorization: OAuth %s", auth_params);
+    snprintf(auth_header, sizeof(auth_header),
+            "Authorization: OAuth %s", auth_params);
 
     if (isPost == TWITC_OAUTH_POST) {
         non_auth_params = oauth_serialize_url_sep(argc, 1, argv, "&", 1 );
@@ -155,6 +180,7 @@ twitc_oauth_request_token(const char *req_c_key, const char *req_c_secret,
                           char **token, char **secret)
 {
     int toRet = 0;
+    char url_and_token[BUFSIZ] = "";
     struct MemoryStruct reply;
     reply.memory = malloc(1);
     reply.size = 0;
@@ -162,8 +188,10 @@ twitc_oauth_request_token(const char *req_c_key, const char *req_c_secret,
         fprintf(stderr, "not enough memory (malloc returned NULL)\n");
         exit(1);
     }
-    
-    twitc_oauth_request(REQUEST_TOKEN_URL, req_c_key,
+
+    snprintf(url_and_token, sizeof(url_and_token),
+            "%s?oauth_callback=oob", REQUEST_TOKEN_URL);
+    twitc_oauth_request(url_and_token, req_c_key,
             req_c_secret, NULL, NULL, &reply, TWITC_OAUTH_GET,
             &twitc_get_memory_callback);
 
@@ -184,29 +212,24 @@ twitc_oauth_request_token(const char *req_c_key, const char *req_c_secret,
 int
 twitc_oauth_authorize_token(char *token, char **pin)
 {
-    char *url_and_token = malloc(BUFSIZ);
-    char *my_pin = malloc(BUFSIZ);
-    if (url_and_token == NULL || my_pin == NULL) {
-        fprintf(stderr, "not enough memory (malloc returned NULL)\n");
-        exit(1);
-    }
+    char url_and_token[BUFSIZ] = "";
+    char my_pin[BUFSIZ] = "";
 
-    sprintf(url_and_token, "%s?%s=%s", AUTHORIZE_URL, TWITC_OAUTH_TOKEN, token);
+    snprintf(url_and_token, sizeof(url_and_token),
+            "%s?%s=%s", AUTHORIZE_URL, TWITC_OAUTH_TOKEN, token);
     printf("Go to this url in a browser to authorize this app:\n%s\n",
             url_and_token);
     
     printf("Now input the pin that you have obtained:\n");
     scanf("%s", my_pin);
 
-    int size = strlen(my_pin);
-    pin = realloc(pin, (size + 1) * sizeof(char));
-    memcpy(pin, &my_pin, size + 1);
+    int size = strlen(my_pin) + 1;
+    *pin = realloc(*pin, size);
+    memcpy(*pin, &my_pin, size);
 
     printf("You entered %s.\n", *pin);
 
-    free(my_pin);
-    free(url_and_token);
-    return 1;
+    return 0;
 }
 
 int
@@ -215,7 +238,7 @@ twitc_oauth_access_token(const char *req_c_key, const char *req_c_secret,
                          char **access_token, char **access_secret)
 {
     int toRet = 0;
-    char url_and_token[BUFSIZ];
+    char url_and_token[BUFSIZ] = "";
     struct MemoryStruct reply;
     reply.memory = malloc(1);
     reply.size = 0; 
@@ -225,8 +248,7 @@ twitc_oauth_access_token(const char *req_c_key, const char *req_c_secret,
         exit(1);
     }
 
-    sprintf(url_and_token, "%s?%s=%s&%s=%s", ACCESS_TOKEN_URL,
-            TWITC_OAUTH_TOKEN, token,
+    snprintf(url_and_token, sizeof(url_and_token), "%s?%s=%s", ACCESS_TOKEN_URL,
             TWITC_OAUTH_VERIFIER, pin);
     twitc_oauth_request(url_and_token, req_c_key, req_c_secret,
             token, secret, &reply, TWITC_OAUTH_GET,
@@ -257,14 +279,14 @@ twitc_check_memory_for_errors(struct MemoryStruct* mem_struct)
     return 0;
 }
 
-struct MemoryStruct*
+struct MemoryStruct *
 twitc_oauth_twitter(const char *a_url, const char *req_c_key,
                     const char *req_c_secret, char *user_token,
                     char *user_secret, int isPost,
                     size_t (*callback)(void*, size_t, size_t, void*))
 {
-    char url_and_token[BUFSIZ];
-    struct MemoryStruct* reply = malloc(sizeof(*reply));
+    char url_and_token[BUFSIZ] = "";
+    struct MemoryStruct *reply = malloc(sizeof(*reply));
     if (reply == NULL) {
         fprintf(stderr, "not enough memory (malloc returned NULL)\n");
         exit(1);
@@ -276,7 +298,7 @@ twitc_oauth_twitter(const char *a_url, const char *req_c_key,
     }
     reply->size = 0;
 
-    sprintf(url_and_token, "%s", a_url);
+    snprintf(url_and_token, sizeof(url_and_token), "%s", a_url);
     
     twitc_oauth_request(url_and_token, req_c_key, req_c_secret,
             user_token, user_secret, reply, isPost,

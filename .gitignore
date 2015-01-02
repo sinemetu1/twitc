@@ -60,3 +60,4 @@ stamp-h1
 test-drive
 src/test/test_reply
 src/test/test_twitc
+src/test/integration
