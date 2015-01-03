@@ -52,4 +52,4 @@ Please file bugs in Github issues.
 
 ### License:
 
-[MIT](https://github.com/sinemetu1/twitc/blob/test-separation/LICENSE)
+[MIT](https://github.com/sinemetu1/twitc/blob/master/LICENSE)
