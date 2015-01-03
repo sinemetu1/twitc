@@ -76,41 +76,37 @@ int
 twitc_parse_reply(char *reply, char **token, char **secret)
 {
   int success = 1;
-  char **rv = NULL;
-  int rc;
+  char oauth_token_chk[BUFSIZ];
+  char oauth_secret_chk[BUFSIZ];
+  int oauth_token_len  = 0;
+  int oauth_secret_len = 0;
+  char *delim = "&";
+  char *reply_token;
 
-  rc = oauth_split_url_parameters(reply, &rv);
-  qsort(rv, rc, sizeof(char *), oauth_cmpstringp);
+  snprintf(oauth_token_chk, sizeof(oauth_token_chk),
+          "%s=", TWITC_OAUTH_TOKEN);
+  snprintf(oauth_secret_chk, sizeof(oauth_secret_chk),
+          "%s=", TWITC_OAUTH_TOKEN_SECRET);
+  oauth_token_len = strlen(oauth_token_chk) - 1;
+  oauth_secret_len = strlen(oauth_secret_chk) - 1;
 
-  if (rc >= 2) {
-    success = 0;
-    /*printf("rv[0]: %s\n", rv[0]);*/
-    /*printf("rv[1]: %s\n", rv[1]);*/
-    /*printf("rv[2]: %s\n", rv[2]);*/
-    if (!strncmp(rv[0], "oauth_token=", 11)
-        && !strncmp(rv[1], "oauth_token_secret=", 18)) {
-        if (token) {
-            *token = strdup(&(rv[0][12]));
-        }
-        if (secret) {
-            *secret = strdup(&(rv[1][19]));
-        }
-    } else if (!strncmp(rv[1], "oauth_token=", 11)
-        && !strncmp(rv[2], "oauth_token_secret=", 18)) {
-        if (token) {
-            *token = strdup(&(rv[1][12]));
-        }
-        if (secret) {
-            *secret = strdup(&(rv[2][19]));
-        }
-    }
-  }
+  reply_token = strtok(reply, delim);
+  while (reply_token != NULL) {
+      int is_oauth_token =
+          strncmp(reply_token, oauth_token_chk, oauth_token_len) == 0;
+      int is_oauth_token_secret =
+          strncmp(reply_token, oauth_secret_chk, oauth_secret_len) == 0;
 
-  if (rv) {
-      for (int i = 0; i < rc; i++) {
-          free(rv[i]);
+      if (is_oauth_token && !is_oauth_token_secret) {
+          char *a_token = reply_token + oauth_token_len + 1;
+          *token = strdup(a_token);
+      } else if (is_oauth_token_secret) {
+          char *a_secret = reply_token + oauth_secret_len + 1;
+          *secret = strdup(a_secret);
       }
-      free(rv);
+
+      /* continue with other tokens */
+      reply_token = strtok(NULL, delim);
   }
 
   return success;
