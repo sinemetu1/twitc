@@ -106,6 +106,8 @@ test_twitc_oauth_authorize_token_integration(void)
     mu_assert("should be able to authorize a token", strlen(pin) > 0);
 
     free(pin);
+    if (secret) { free(secret); }
+    if (token) { free(token); }
 
     return 0;
 }

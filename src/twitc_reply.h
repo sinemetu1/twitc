@@ -7,6 +7,10 @@
 #ifndef TWITC_REPLY_H
 #define TWITC_REPLY_H
 
+#define TWITC_OAUTH_TOKEN        "oauth_token"
+#define TWITC_OAUTH_TOKEN_SECRET "oauth_token_secret"
+#define TWITC_OAUTH_VERIFIER     "oauth_verifier"
+
 #define TWITC_REPLY_USER_KEY       "user"
 #define TWITC_REPLY_SN_KEY         "screen_name"
 #define TWITC_REPLY_STATUS         "status"

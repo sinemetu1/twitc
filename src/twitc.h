@@ -14,9 +14,6 @@
 #define LIBTWITC_VERSION_MINOR 0
 #define LIBTWITC_VERSION_MICRO 2
 
-#define TWITC_OAUTH_TOKEN    "oauth_token"
-#define TWITC_OAUTH_VERIFIER "oauth_verifier"
-
 #define TWITC_OAUTH_GET  1
 #define TWITC_OAUTH_POST 0
 
