@@ -8,6 +8,10 @@ A mini C library for interacting with the Twitter OAuth api.
 
 ### Installation:
 
+    # if deps need to be installed:
+    ./install_deps.sh /usr/local
+    
+    # building twitc
     ./autogen.sh
     ./configure
     make
