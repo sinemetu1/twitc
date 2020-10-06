@@ -94,7 +94,7 @@ int twitc_oauth_request_token(const char *req_c_key, const char *req_c_secret,
  * See: https://dev.twitter.com/oauth/reference/get/oauth/authorize
  *
  * @param token a token that is used to get the proper url for authorization
- * @param pin that is used once the user has visited the authorzation url.
+ * @param pin that is used once the user has visited the authorization url.
  *   NOTE: pin is realloc'd and will need to be freed by the caller.
  * @return 0 == success and 1 == failure.
  */
@@ -112,7 +112,7 @@ int twitc_oauth_authorize_token(char *token, char **pin);
  * @param req_c_secret consumer secret
  * @param token a token that will be set once the reply from twitter is received
  * @param secret a secret that will be set once the reply from twitter is received
- * @param pin that is used once the user has visited the authorzation url
+ * @param pin that is used once the user has visited the authorization url
  * @param access_token will be set by making a call to verify with the pin
  * @param access_secret will be set by making a call to verify with the pin
  * @return 0 == success and 1 == failure.
